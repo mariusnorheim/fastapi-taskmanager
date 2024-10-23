@@ -14,11 +14,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreated }) => {
         e.preventDefault();
         try {
             await createTask({ title, description });
-            onTaskCreated();
             // Clear form and errors after submission
             setTitle('');
             setDescription('');
             setError(null);
+            onTaskCreated();
         } catch (err) {
             setError('Failed to create task. Please try again.');
         }
