@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ErrorDisplay from './components/ErrorDisplay';
 import TaskList from './components/TaskList';
 import TaskForm from './components/TaskForm';
 import { getTasks, createTask } from './services/taskService';
@@ -47,10 +48,7 @@ const App: React.FC = () => {
         <div className="bg-gray-100 min-h-screen p-8">
             <h1 className="text-3xl font-bold mb-8 text-center">Task Manager</h1>
             
-            <div className="container mx-auto p-4">
-                {error && <div className="bg-red-500 text-white p-4 rounded mb-4">{error}</div>}
-            </div>
-
+            <ErrorDisplay message={error} />
             <TaskForm onTaskCreated={handleTaskCreated} handleError={handleError} />
             <TaskList tasks={tasks} refreshTaskList={refreshTaskList} handleError={handleError} />
         </div>
