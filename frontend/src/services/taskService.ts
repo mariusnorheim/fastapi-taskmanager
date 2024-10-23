@@ -12,7 +12,6 @@ interface TaskCreate {
 
 const API_URL = 'http://localhost:8000/tasks/';
 
-// Fetch all tasks
 export const getTasks = async (): Promise<Task[]> => {
     const response = await fetch(API_URL);
     if (!response.ok) {
@@ -21,7 +20,6 @@ export const getTasks = async (): Promise<Task[]> => {
     return response.json(); // Parse JSON response
 };
 
-// Create a new task
 export const createTask = async (task: TaskCreate): Promise<Task> => {
     const response = await fetch(API_URL, {
         method: 'POST',
@@ -36,7 +34,6 @@ export const createTask = async (task: TaskCreate): Promise<Task> => {
     return response.json();
 };
 
-// Update an existing task
 export const updateTask = async (id: number, task: TaskCreate): Promise<Task> => {
     const response = await fetch(`${API_URL}${id}`, {
         method: 'PUT',
@@ -51,7 +48,6 @@ export const updateTask = async (id: number, task: TaskCreate): Promise<Task> =>
     return response.json();
 };
 
-// Delete a task
 export const deleteTask = async (id: number): Promise<void> => {
     const response = await fetch(`${API_URL}${id}`, {
         method: 'DELETE',

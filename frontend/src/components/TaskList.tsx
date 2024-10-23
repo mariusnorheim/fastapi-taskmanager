@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { getTasks, deleteTask, updateTask } from '../services/taskService';
+import React from 'react';
+import { updateTask, deleteTask } from '../services/taskService';
 
 interface Task {
     id: number;
@@ -8,47 +8,37 @@ interface Task {
     completed: boolean;
 }
 
-const TaskList: React.FC = () => {
-    const [tasks, setTasks] = useState<Task[]>([]);
-    const [error, setError] = useState<string | null>(null);
+interface TaskListProps {
+    tasks: Task[];
+    refreshTaskList: () => void;
+    handleError: (message: string) => void;
+}
 
-    useEffect(() => {
-        loadTasks();
-    }, []);
-
-    const loadTasks = async () => {
+const TaskList: React.FC<TaskListProps> = ({ tasks, refreshTaskList, handleError }) => {
+    const handleComplete = async (task: Task) => {
         try {
-            const data = await getTasks();
-            setTasks(data);
+            const updatedTask = { ...task, completed: !task.completed };
+            await updateTask(task.id, updatedTask);
+            refreshTaskList();
+            handleError("");
         } catch (err) {
-            setError('Failed to load tasks. Please try again later.');
+            handleError("Failed to update task. Please try again later.");
         }
     };
 
     const handleDelete = async (id: number) => {
         try {
             await deleteTask(id);
-            loadTasks();
+            refreshTaskList();
+            handleError("");
         } catch (err) {
-            setError('Failed to delete task. Please try again.');
-        }
-    };
-
-    const handleComplete = async (task: Task) => {
-        try {
-            const updatedTask = { ...task, completed: !task.completed };
-            await updateTask(task.id, updatedTask);
-            loadTasks();
-        } catch (err) {
-            setError('Failed to update task. Please try again.');
+            handleError("Failed to delete task. Please try again later.");
         }
     };
 
     return (
         <div className="container mx-auto p-4">
             <h2 className="text-2xl font-bold mb-4">Task List</h2>
-
-            {error && <div className="text-red-500 mb-4">{error}</div>}
 
             <ul className="space-y-4">
                 {tasks.map((task) => (
